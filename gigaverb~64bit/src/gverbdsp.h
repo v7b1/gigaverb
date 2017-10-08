@@ -12,26 +12,26 @@
 typedef struct {
   int size;
   int idx;
-  float *buf;
+  double *buf;
 } ty_fixeddelay;
 
 typedef struct {
   int size;
-  float coeff;
+  double coeff;
   int idx;
-  float *buf;
+  double *buf;
 } ty_diffuser;
 
 typedef struct {
-  float damping;
-  float delay;
+  double damping;
+  double delay;
 } ty_damper;
 
-extern ty_diffuser *diffuser_make(int, float);
+extern ty_diffuser *diffuser_make(int, double);
 extern void diffuser_free(ty_diffuser *);
 extern void diffuser_flush(ty_diffuser *);
 
-extern ty_damper *damper_make(float);
+extern ty_damper *damper_make(double);
 extern void damper_free(ty_damper *);
 extern void damper_flush(ty_damper *);
 
@@ -41,22 +41,22 @@ extern void fixeddelay_flush(ty_fixeddelay *);
 
 extern int isprime(int);
 extern int nearest_prime(int, float);
-extern int ff_round(float f);
+extern int ff_round(float f);       // TODO: fix rounding and truncation
 extern int ff_trunc(float f);
 
-static inline float diffuser_do(ty_diffuser *p, float x)
+static inline double diffuser_do(ty_diffuser *p, double x)
 {
-	float y,w;
+	double y,w;
 
 	w = x - p->buf[p->idx]*p->coeff;
-	FIX_DENORM_NAN_FLOAT(w);
+	FIX_DENORM_NAN_DOUBLE(w);
 	y = p->buf[p->idx] + w*p->coeff;
 	p->buf[p->idx] = w;
 	p->idx = (p->idx + 1) % p->size;
 	return(y);
 }
 
-static inline float fixeddelay_read(ty_fixeddelay *p, int n)
+static inline double fixeddelay_read(ty_fixeddelay *p, int n)
 {
 	int i;
 
@@ -64,21 +64,21 @@ static inline float fixeddelay_read(ty_fixeddelay *p, int n)
 	return(p->buf[i]);
 }
 
-static inline void fixeddelay_write(ty_fixeddelay *p, float x)
+static inline void fixeddelay_write(ty_fixeddelay *p, double x)
 {
-	FIX_DENORM_NAN_FLOAT(x);
+	FIX_DENORM_NAN_DOUBLE(x);
 	p->buf[p->idx] = x;
 	p->idx = (p->idx + 1) % p->size;
 }
 
-static inline void damper_set(ty_damper *p, float damping)
+static inline void damper_set(ty_damper *p, double damping)
 { 
 	p->damping = damping;
 } 
   
-static inline float damper_do(ty_damper *p, float x)
+static inline double damper_do(ty_damper *p, double x)
 { 
-	float y;
+	double y;
 
 	y = x*(1.0-p->damping) + p->delay*p->damping;
 	p->delay = y;

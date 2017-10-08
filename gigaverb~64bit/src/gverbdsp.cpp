@@ -29,7 +29,7 @@
 #include <string.h>
 #endif
 
-ty_diffuser *diffuser_make(int size, float coeff)
+ty_diffuser *diffuser_make(int size, double coeff)
 {
 	ty_diffuser *p;
 	int i;
@@ -39,7 +39,7 @@ ty_diffuser *diffuser_make(int size, float coeff)
 	p->size = size;
 	p->coeff = coeff;
 	p->idx = 0;
-	p->buf = (float *)t_getbytes(size*sizeof(float));
+	p->buf = (double *)t_getbytes(size*sizeof(double));
 	if(!p->buf) return (NULL);
 	for (i = 0; i < size; i++) p->buf[i] = 0.0;
 	return(p);
@@ -47,16 +47,16 @@ ty_diffuser *diffuser_make(int size, float coeff)
 
 void diffuser_free(ty_diffuser *p)
 {
-	t_freebytes(p->buf, p->size*sizeof(float));
+	t_freebytes(p->buf, p->size*sizeof(double));
 	t_freebytes(p, sizeof(ty_diffuser));
 }
 
 void diffuser_flush(ty_diffuser *p)
 {
-	memset(p->buf, 0, p->size * sizeof(float));
+	memset(p->buf, 0, p->size * sizeof(double));
 }
 
-ty_damper *damper_make(float damping)
+ty_damper *damper_make(double damping)
 {
 	ty_damper *p;
 
@@ -79,7 +79,7 @@ void damper_flush(ty_damper *p)
 
 void fixeddelay_flush(ty_fixeddelay *p)
 {
-	memset(p->buf, 0, p->size * sizeof(float));
+	memset(p->buf, 0, p->size * sizeof(double));
 }
 
 ty_fixeddelay *fixeddelay_make(int size)
@@ -91,7 +91,7 @@ ty_fixeddelay *fixeddelay_make(int size)
 	if(!p) return (NULL);
 	p->size = size;
 	p->idx = 0;
-	p->buf = (float *)t_getbytes(size*sizeof(float));
+	p->buf = (double *)t_getbytes(size*sizeof(double));
 	if(!p->buf) return (NULL);
 	for (i = 0; i < size; i++)
 		p->buf[i] = 0.0;
@@ -100,14 +100,14 @@ ty_fixeddelay *fixeddelay_make(int size)
 
 void fixeddelay_free(ty_fixeddelay *p)
 {
-	t_freebytes(p->buf, p->size*sizeof(float));
+	t_freebytes(p->buf, p->size*sizeof(double));
 	t_freebytes(p, sizeof(ty_diffuser));
 }
 
 int isprime(int n)
 {
   unsigned int i;
-  const unsigned int lim = (int)sqrtf((float)n);
+  const unsigned int lim = (int)sqrt((double)n);
 
   if (n == 2) return(1);
   if ((n & 1) == 0) return(0);
@@ -116,7 +116,7 @@ int isprime(int n)
   return(1);
 }
 
-int nearest_prime(int n, float rerror)
+int nearest_prime(int n, double rerror)
      /* relative error; new prime will be in range
       * [n-n*rerror, n+n*rerror];
       */
@@ -133,7 +133,7 @@ int nearest_prime(int n, float rerror)
   return(-1);
 }
 
-// Truncate float to int
+// Truncate float to int        // TODO: fix round and trunc
 int ff_trunc(float f) {
         f -= 0.5f;
         f += (3<<22);

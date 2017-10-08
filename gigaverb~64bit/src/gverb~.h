@@ -43,29 +43,29 @@ typedef struct
 	t_pxobject p_obj;
 	int bypass;
 	int rate;
-	float inputbandwidth;
-	float drylevel;
-	float taillevel;
-	float earlylevel;
+	double inputbandwidth;
+	double drylevel;
+	double taillevel;
+	double earlylevel;
 	ty_damper *inputdamper;
-	float maxroomsize;
-	float roomsize;
-	float revtime;
-	float maxdelay;
-	float largestdelay;
+	double maxroomsize;
+	double roomsize;
+	double revtime;
+	double maxdelay;
+	double largestdelay;
 	ty_fixeddelay **fdndels;
-	float *fdngains;
+	double *fdngains;
 	int *fdnlens;
 	ty_damper **fdndamps; 
-	float fdndamping;
+	double fdndamping;
 	ty_diffuser **ldifs;
 	ty_diffuser **rdifs;
 	ty_fixeddelay *tapdelay;
 	int *taps;
-	float *tapgains;
-	float *d;
-	float *u;
-	float *f;
+	double *tapgains;
+	double *d;
+	double *u;
+	double *f;
 	double alpha;
 } ty_gverb;
 
@@ -77,7 +77,7 @@ static t_class *gverb_class;
 void *gverb_new(t_symbol *s, short argc, t_atom *argv);
 void gverb_free(ty_gverb *);
 void gverb_flush(ty_gverb *);
-static void gverb_do(ty_gverb *, float, float *, float *);
+static void gverb_do(ty_gverb *, double, double *, double *);
 static void gverb_set_roomsize(ty_gverb *, double);
 static void gverb_set_revtime(ty_gverb *, double);
 static void gverb_set_damping(ty_gverb *, double);
@@ -118,25 +118,25 @@ void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
  * be 0.5, say.
  */
 
-static inline void gverb_fdnmatrix(float *a, float *b)
+static inline void gverb_fdnmatrix(double *a, double *b)
 {
-  const float dl0 = a[0], dl1 = a[1], dl2 = a[2], dl3 = a[3];
+  const double dl0 = a[0], dl1 = a[1], dl2 = a[2], dl3 = a[3];
 
-  b[0] = 0.5f*(+dl0 + dl1 - dl2 - dl3);
-  b[1] = 0.5f*(+dl0 - dl1 - dl2 + dl3);
-  b[2] = 0.5f*(-dl0 + dl1 - dl2 + dl3);
-  b[3] = 0.5f*(+dl0 + dl1 + dl2 + dl3);
+  b[0] = 0.5*(+dl0 + dl1 - dl2 - dl3);
+  b[1] = 0.5*(+dl0 - dl1 - dl2 + dl3);
+  b[2] = 0.5*(-dl0 + dl1 - dl2 + dl3);
+  b[3] = 0.5*(+dl0 + dl1 + dl2 + dl3);
 }
 
-static inline void gverb_do(ty_gverb *p, float x, float *yl, float *yr)
+static inline void gverb_do(ty_gverb *p, double x, double *yl, double *yr)
 {
-	float z;
+	double z;
 	unsigned int i;
-	float lsum,rsum,sum,sign;
+	double lsum,rsum,sum,sign;
 
-	if(IS_NAN_FLOAT(x) || IS_DENORM_FLOAT(x) || fabsf(x) > 100000.0f)
+	if(IS_NAN_DOUBLE(x) || IS_DENORM_DOUBLE(x) || fabs(x) > 100000.)
 	{
-		x = 0.0f;
+		x = 0.0;
 	}
 
 	z = damper_do(p->inputdamper, x);
@@ -156,8 +156,8 @@ static inline void gverb_do(ty_gverb *p, float x, float *yl, float *yr)
 							p->fdnlens[i]));
 	}
 
-	sum = 0.0f;
-	sign = 1.0f;
+	sum = 0.0;
+	sign = 1.0;
 	for(i = 0; i < FDNORDER; i++)
 	{
 		sum += sign*(p->taillevel*p->d[i] + p->earlylevel*p->u[i]);
@@ -189,53 +189,53 @@ static inline void gverb_set_roomsize(ty_gverb *p, double a)
 {
 	unsigned int i;
 
-	if(a <= 1.0 || IS_NAN_FLOAT(a))
+	if(a <= 1.0 || IS_NAN_DOUBLE(a))
 	{
 		p->roomsize = 1.0;
 	}
 	else
 	{
-		p->roomsize = CLAMP(a, 1.0f, p->maxroomsize);
+		p->roomsize = CLAMP(a, 1.0, p->maxroomsize);
 	}
 	p->largestdelay = p->rate * p->roomsize * 0.00294f;
 
-	p->fdnlens[0] = ff_round(1.000000f*p->largestdelay);
-	p->fdnlens[1] = ff_round(0.816490f*p->largestdelay);
-	p->fdnlens[2] = ff_round(0.707100f*p->largestdelay);
-	p->fdnlens[3] = ff_round(0.632450f*p->largestdelay);
+	p->fdnlens[0] = ff_round(1.000000*p->largestdelay);
+	p->fdnlens[1] = ff_round(0.816490*p->largestdelay);
+	p->fdnlens[2] = ff_round(0.707100*p->largestdelay);
+	p->fdnlens[3] = ff_round(0.632450*p->largestdelay);
 	for(i = 0; i < FDNORDER; i++)
 	{
 		p->fdngains[i] = -powf((float)p->alpha, p->fdnlens[i]);
 	}
 
-	p->taps[0] = 5+ff_round(0.410f*p->largestdelay);
-	p->taps[1] = 5+ff_round(0.300f*p->largestdelay);
-	p->taps[2] = 5+ff_round(0.155f*p->largestdelay);
-	p->taps[3] = 5+ff_round(0.000f*p->largestdelay);
+	p->taps[0] = 5+ff_round(0.410*p->largestdelay);
+	p->taps[1] = 5+ff_round(0.300*p->largestdelay);
+	p->taps[2] = 5+ff_round(0.155*p->largestdelay);
+	p->taps[3] = 5+ff_round(0.000*p->largestdelay);
 
 	for(i = 0; i < FDNORDER; i++)
 	{
-		p->tapgains[i] = powf((float)p->alpha, p->taps[i]);
+		p->tapgains[i] = pow(p->alpha, p->taps[i]);
 	}
 }
 
 static inline void gverb_set_revtime(ty_gverb *p, double a)
 {
-	float ga,gt;
+	double ga,gt;
 	double n;
 	unsigned int i;
 
-	p->revtime = CLAMP(a, 0.1f, 360.0f);
+	p->revtime = CLAMP(a, 0.1, 360.0);
 
-	ga = 60.0f;
+	ga = 60.0;
 	gt = p->revtime;
-	ga = powf(10.0f,-ga/20.0f);
+	ga = powf(10.0f,-ga/20.0);
 	n = p->rate*gt;
-	p->alpha = (double)powf(ga,1.0f/n);
+	p->alpha = pow(ga,1.0/n);
 
 	for(i = 0; i < FDNORDER; i++)
 	{
-		p->fdngains[i] = -powf((float)p->alpha, p->fdnlens[i]);
+		p->fdngains[i] = -pow(p->alpha, p->fdnlens[i]);
 	}
 }
 
@@ -243,7 +243,7 @@ static inline void gverb_set_damping(ty_gverb *p, double a)
 {
 	unsigned int i;
 
-	p->fdndamping = CLAMP(a, 0.0f, 1.0f);
+	p->fdndamping = CLAMP(a, 0.0, 1.0);
 	for(i = 0; i < FDNORDER; i++)
 	{
 		damper_set(p->fdndamps[i],p->fdndamping);
@@ -252,25 +252,25 @@ static inline void gverb_set_damping(ty_gverb *p, double a)
 
 static inline void gverb_set_inputbandwidth(ty_gverb *p, double a)
 {
-	p->inputbandwidth = CLAMP(a, 0.0f, 1.0f);
-	damper_set(p->inputdamper,1.0f - p->inputbandwidth);
+	p->inputbandwidth = CLAMP(a, 0.0, 1.0);
+	damper_set(p->inputdamper,1.0 - p->inputbandwidth);
 }
 
 static inline void gverb_set_drylevel(ty_gverb *p, double a)
 {
-	a = CLAMP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0, 0.0);
 	p->drylevel = DB_CO(a);
 }
 
 static inline void gverb_set_earlylevel(ty_gverb *p, double a)
 {
-	a = CLAMP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0, 0.0);
 	p->earlylevel = DB_CO(a);
 }
 
 static inline void gverb_set_taillevel(ty_gverb *p, double a)
 {
-	a = CLAMP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0, 0.0);
 	p->taillevel = DB_CO(a);
 }
 
