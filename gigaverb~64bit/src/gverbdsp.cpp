@@ -34,12 +34,12 @@ ty_diffuser *diffuser_make(int size, double coeff)
 	ty_diffuser *p;
 	int i;
 
-	p = (ty_diffuser *)t_getbytes(sizeof(ty_diffuser));
+	p = (ty_diffuser *)sysmem_newptr(sizeof(ty_diffuser));
 	if(!p) return (NULL);
 	p->size = size;
 	p->coeff = coeff;
 	p->idx = 0;
-	p->buf = (double *)t_getbytes(size*sizeof(double));
+	p->buf = (double *)sysmem_newptr(size*sizeof(double));
 	if(!p->buf) return (NULL);
 	for (i = 0; i < size; i++) p->buf[i] = 0.0;
 	return(p);
@@ -60,7 +60,7 @@ ty_damper *damper_make(double damping)
 {
 	ty_damper *p;
 
-	p = (ty_damper *)t_getbytes(sizeof(ty_damper));
+	p = (ty_damper *)sysmem_newptr(sizeof(ty_damper));
 	if(!p) return (NULL);
 	p->damping = damping;
 	p->delay = 0.0;
@@ -69,12 +69,12 @@ ty_damper *damper_make(double damping)
 
 void damper_free(ty_damper *p)
 {
-	t_freebytes(p, sizeof(ty_damper));
+	sysmem_freeptr(p);
 }
 
 void damper_flush(ty_damper *p)
 {
-	p->delay = 0.0f;
+	p->delay = 0.0;
 }
 
 void fixeddelay_flush(ty_fixeddelay *p)
@@ -87,11 +87,11 @@ ty_fixeddelay *fixeddelay_make(int size)
 	ty_fixeddelay *p;
 	int i;
 
-	p = (ty_fixeddelay *)t_getbytes(sizeof(ty_fixeddelay));
+	p = (ty_fixeddelay *)sysmem_newptr(sizeof(ty_fixeddelay));
 	if(!p) return (NULL);
 	p->size = size;
 	p->idx = 0;
-	p->buf = (double *)t_getbytes(size*sizeof(double));
+	p->buf = (double *)sysmem_newptr(size*sizeof(double));
 	if(!p->buf) return (NULL);
 	for (i = 0; i < size; i++)
 		p->buf[i] = 0.0;
@@ -100,8 +100,8 @@ ty_fixeddelay *fixeddelay_make(int size)
 
 void fixeddelay_free(ty_fixeddelay *p)
 {
-	t_freebytes(p->buf, p->size*sizeof(double));
-	t_freebytes(p, sizeof(ty_diffuser));
+	sysmem_freeptr(p->buf);
+	sysmem_freeptr(p);
 }
 
 int isprime(int n)

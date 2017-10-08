@@ -126,8 +126,8 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 
 
 	/* FDN section */
-
-	p->fdndels = (ty_fixeddelay **)t_getbytes(FDNORDER*sizeof(ty_fixeddelay *));
+    //p->fdndels = (ty_fixeddelay **)t_getbytes(FDNORDER*sizeof(ty_fixeddelay *));
+	p->fdndels = (ty_fixeddelay **)sysmem_newptr(FDNORDER*sizeof(ty_fixeddelay *));
 	if(!p->fdndels)
 	{
 		error("gigaverb~: out of memory");
@@ -142,15 +142,15 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 			return (NULL);
 		}
 	}
-	p->fdngains = (double *)t_getbytes(FDNORDER*sizeof(double));
-	p->fdnlens = (int *)t_getbytes(FDNORDER*sizeof(int));
+    p->fdngains = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->fdnlens = (int *)sysmem_newptr(FDNORDER*sizeof(int));
 	if(!p->fdngains || !p->fdnlens)
 	{
 		error("gigaverb~: out of memory");
 		return (NULL);
 	}
 
-	p->fdndamps = (ty_damper **)t_getbytes(FDNORDER*sizeof(ty_damper *));
+	p->fdndamps = (ty_damper **)sysmem_newptr(FDNORDER*sizeof(ty_damper *));
 	if(!p->fdndamps)
 	{
 		error("gigaverb~: out of memory");
@@ -189,9 +189,9 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 		p->fdngains[i] = -pow(p->alpha,p->fdnlens[i]);
 	}
 
-	p->d = (double *)t_getbytes(FDNORDER*sizeof(double));
-	p->u = (double *)t_getbytes(FDNORDER*sizeof(double));
-	p->f = (double *)t_getbytes(FDNORDER*sizeof(double));
+	p->d = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->u = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->f = (double *)sysmem_newptr(FDNORDER*sizeof(double));
 	if(!p->d || !p->u || !p->f)
 	{
 		error("gigaverb~: out of memory");
@@ -203,7 +203,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	/* Diffuser section */
 
 
-	diffscale = (float)p->fdnlens[3]/(210+159+562+410);
+	diffscale = p->fdnlens[3]/(210+159+562+410);
 	spread1 = spread;
 	spread2 = 3.0*spread;
 
@@ -218,7 +218,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	dd = d-c;
 	e = 1341-d;
 
-	p->ldifs = (ty_diffuser **)t_getbytes(4*sizeof(ty_diffuser *));
+	p->ldifs = (ty_diffuser **)sysmem_newptr(4*sizeof(ty_diffuser *));
 	if(!p->ldifs)
 	{
 		error("gigaverb~: out of memory");
@@ -245,7 +245,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	dd = d-c;
 	e = 1341-d;
 
-	p->rdifs = (ty_diffuser **)t_getbytes(4*sizeof(ty_diffuser *));
+	p->rdifs = (ty_diffuser **)sysmem_newptr(4*sizeof(ty_diffuser *));
 	if(!p->rdifs)
 	{
 		error("gigaverb~: out of memory");
@@ -265,8 +265,8 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	/* Tapped delay section */
 
 	p->tapdelay = fixeddelay_make(44000);
-	p->taps = (int *)t_getbytes(FDNORDER*sizeof(int));
-	p->tapgains = (double *)t_getbytes(FDNORDER*sizeof(double));
+	p->taps = (int *)sysmem_newptr(FDNORDER*sizeof(int));
+	p->tapgains = (double *)sysmem_newptr(FDNORDER*sizeof(double));
 	if(!p->tapdelay || !p->taps || !p->tapgains)
 	{
 		error("gigaverb~: out of memory");
@@ -300,17 +300,31 @@ void gverb_free(ty_gverb *p)
 		diffuser_free(p->ldifs[i]);
 		diffuser_free(p->rdifs[i]);
 	}
-	t_freebytes(p->fdndels, FDNORDER*sizeof(ty_fixeddelay *));
-	t_freebytes(p->fdngains, FDNORDER*sizeof(double));
-	t_freebytes(p->fdnlens, FDNORDER*sizeof(int));
-	t_freebytes(p->fdndamps, FDNORDER*sizeof(ty_damper *));
-	t_freebytes(p->d, FDNORDER*sizeof(float));
-	t_freebytes(p->u, FDNORDER*sizeof(float));
-	t_freebytes(p->f, FDNORDER*sizeof(float));
-	t_freebytes(p->ldifs, 4*sizeof(ty_diffuser *));
-	t_freebytes(p->rdifs, 4*sizeof(ty_diffuser *));
-	t_freebytes(p->taps, FDNORDER*sizeof(int));
-	t_freebytes(p->tapgains, FDNORDER*sizeof(float));
+	sysmem_freeptr(p->fdndels);
+	sysmem_freeptr(p->fdngains);
+	sysmem_freeptr(p->fdnlens);
+	sysmem_freeptr(p->fdndamps);
+	sysmem_freeptr(p->d);
+	sysmem_freeptr(p->u);
+	sysmem_freeptr(p->f);
+	sysmem_freeptr(p->ldifs);
+	sysmem_freeptr(p->rdifs);
+	sysmem_freeptr(p->taps);
+	sysmem_freeptr(p->tapgains);
+    
+    /*
+     t_freebytes(p->fdndels, FDNORDER*sizeof(ty_fixeddelay *));
+     t_freebytes(p->fdngains, FDNORDER*sizeof(double));
+     t_freebytes(p->fdnlens, FDNORDER*sizeof(int));
+     t_freebytes(p->fdndamps, FDNORDER*sizeof(ty_damper *));
+     t_freebytes(p->d, FDNORDER*sizeof(double));
+     t_freebytes(p->u, FDNORDER*sizeof(double));
+     t_freebytes(p->f, FDNORDER*sizeof(double));
+     t_freebytes(p->ldifs, 4*sizeof(ty_diffuser *));
+     t_freebytes(p->rdifs, 4*sizeof(ty_diffuser *));
+     t_freebytes(p->taps, FDNORDER*sizeof(int));
+     t_freebytes(p->tapgains, FDNORDER*sizeof(double));
+     */
 	fixeddelay_free(p->tapdelay);
 }
 
