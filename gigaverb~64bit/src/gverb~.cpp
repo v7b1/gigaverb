@@ -25,10 +25,16 @@
 #include "gverb~.h"
 #include "gverbdsp.h"
 
-char *version = "gigaverb~ 1.0test5, © 1999-2006 Juhana Sadeharju / Olaf Matthes";
 
-ty_gverb *gverb_new(t_symbol *s, short argc, t_atom *argv)
+char *version = "gigaverb~ 64bit based on 1.0test5, 1999-2006 Juhana Sadeharju / Olaf Matthes / Volker BÃ¶hm";
+
+
+void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 {
+    
+    ty_gverb *p = (ty_gverb *)object_alloc(gverb_class);
+    
+    
 	float maxroomsize = 300.0f;
 	float roomsize = 50.0f;
 	float revtime = 7.0f;
@@ -52,11 +58,11 @@ ty_gverb *gverb_new(t_symbol *s, short argc, t_atom *argv)
 		// get maxroomsize
 		if(argv->a_type == A_LONG)
 		{
-			maxroomsize = CLIP((float)argv[0].a_w.w_long, 0.1f, 10000.0f);
+			maxroomsize = CLAMP((float)argv[0].a_w.w_long, 0.1f, 10000.0f);
 		}
 		else if(argv->a_type == A_FLOAT)
 		{
-			maxroomsize = CLIP(argv[0].a_w.w_float, 0.1f, 10000.0f);
+			maxroomsize = CLAMP(argv[0].a_w.w_float, 0.1f, 10000.0f);
 		}
 	}
 	else if(argc >= 2)
@@ -64,21 +70,29 @@ ty_gverb *gverb_new(t_symbol *s, short argc, t_atom *argv)
 		// get spreading
 		if(argv->a_type == A_LONG)
 		{
-			spread = CLIP((float)argv[1].a_w.w_long, 0.0f, 100.0f);
+			spread = CLAMP((float)argv[1].a_w.w_long, 0.0f, 100.0f);
 		}
 		else if(argv->a_type == A_FLOAT)
 		{
-			spread = CLIP(argv[1].a_w.w_float, 0.0f, 100.0f);
+			spread = CLAMP(argv[1].a_w.w_float, 0.0f, 100.0f);
 		}
 	}
 
-	ty_gverb *p = (ty_gverb *)newobject(gverb_class);
+	//ty_gverb *p = (ty_gverb *)newobject(gverb_class);
+    
 
+    //t_myObj *x = object_alloc(myObj_class);
+    
+    
     // zero out the struct, to be careful
     if(p)
     {
     	for(i = sizeof(t_pxobject); i < sizeof(ty_gverb); i++)
     		((char*)p)[i] = 0;
+    }
+    else {
+        object_free(p);
+        p = NULL;
     }
 
 	dsp_setup((t_pxobject *)p, 1);
@@ -88,7 +102,7 @@ ty_gverb *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	p->rate = (int)sys_getsr();
 	p->fdndamping = damping;
 	p->maxroomsize = maxroomsize;
-	p->roomsize = CLIP(roomsize, 0.1f, maxroomsize);
+	p->roomsize = CLAMP(roomsize, 0.1f, maxroomsize);
 	p->revtime = revtime;
 	p->drylevel = drylevel;
 	p->earlylevel = earlylevel;
@@ -343,9 +357,66 @@ void gverb_dsp(ty_gverb *p, t_signal **sp)
 	dsp_add(gverb_perform, 5, sp[0]->s_vec, sp[1]->s_vec, sp[2]->s_vec, p, sp[0]->s_n);
 }
 
+
+
+
+void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
+                     double **outs, long numouts, long sampleframes, long flags, void *userparam)
+{
+    
+    t_double *in = ins[0];
+    t_double *out1 = outs[0];
+    t_double *out2 = outs[1];
+    
+    long n = sampleframes;
+    t_float outL, outR, input;
+    float dry = p->drylevel;
+    
+    if (p->p_obj.z_disabled)
+        return;
+    
+    if(p->bypass)
+    {
+        // Bypass, so just copy input to output
+        while(n--)
+        {
+            input = *in++;
+            *out1++ = input;
+            *out2++ = input;
+        }
+    }
+    else
+    {
+        // DSP loop
+        while(n--)
+        {
+            input = *in++;
+            gverb_do(p, input, &outL, &outR);
+            *out1++ = outL + input * dry;
+            *out2++ = outR + input * dry;
+        }
+    }
+    
+}
+
+
+//64-bit dsp method
+void gverb_dsp64(ty_gverb *p, t_object *dsp64, short *count, double samplerate,
+                 long maxvectorsize, long flags) {
+    object_method(dsp64, gensym("dsp_add64"), p, gverb_perform64, 0, NULL);
+    
+    p->rate = samplerate;
+    if(p->rate<=0) p->rate = 44100;
+    
+}
+
+
+
 void gverb_set_bypass(ty_gverb *p, long a)
 {
-	p->bypass = CLIP(a, 0, 1);
+    if(a != 0) p->bypass = 1;
+    else p->bypass = 0;
+	//p->bypass = CLAMP(a, 0, 1);
 }
 
 void gverb_flush(ty_gverb *p)
@@ -403,28 +474,37 @@ void gverb_assist(ty_gverb *p, void *b, long m, long a, char *s)
 	}
 }
 
-int main(void)
+
+
+int C74_EXPORT main(void)
 {
-    setup((t_messlist**)&gverb_class, (method)gverb_new, (method)gverb_free,
-    	(short)sizeof(ty_gverb), 0L, A_GIMME, 0);
-    addmess((method)gverb_dsp, "dsp", A_CANT, 0);
-
-    addmess((method)gverb_set_roomsize, "roomsize", A_FLOAT, 0);
-    addmess((method)gverb_set_revtime, "revtime", A_FLOAT, 0);
-    addmess((method)gverb_set_damping, "damping", A_FLOAT, 0);
-    addmess((method)gverb_set_inputbandwidth, "bandwidth", A_FLOAT, 0);
-    addmess((method)gverb_set_drylevel, "dry", A_FLOAT, 0);
-    addmess((method)gverb_set_earlylevel, "early", A_FLOAT, 0);
-    addmess((method)gverb_set_taillevel, "tail", A_FLOAT, 0);
-    addmess((method)gverb_set_bypass, "bypass", A_LONG, 0);
-    addmess((method)gverb_flush, "clear", 0);
-    addmess((method)gverb_print, "print", 0);
-
-    addmess((method)gverb_assist,"assist",A_CANT,0);
-
-	post(version);
-
-    dsp_initclass();
-	
-	return 1;
+    t_class *c;
+    
+    c = class_new("gigaverb~", (method)gverb_new, (method)gverb_free, (short)sizeof(ty_gverb),
+                  0L, A_GIMME, 0L);
+    class_addmethod(c, (method)gverb_dsp, "dsp", A_CANT, 0);
+    class_addmethod(c, (method)gverb_dsp64, "dsp64", A_CANT, 0);
+    
+    class_addmethod(c, (method)gverb_set_roomsize, "roomsize", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_revtime, "revtime", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_damping, "damping", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_inputbandwidth, "bandwidth", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_drylevel, "dry", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_earlylevel, "early", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_taillevel, "tail", A_FLOAT, 0);
+    class_addmethod(c, (method)gverb_set_bypass, "bypass", A_LONG, 0);
+    class_addmethod(c, (method)gverb_flush, "clear", 0);
+    class_addmethod(c, (method)gverb_print, "print", 0);
+    class_addmethod(c, (method)gverb_assist, "assist", A_CANT,0);
+    
+    
+    class_dspinit(c);
+    class_register(CLASS_BOX, c);
+    gverb_class = c;
+    
+    
+    post(version);
+    
+    
+    return 0;
 }

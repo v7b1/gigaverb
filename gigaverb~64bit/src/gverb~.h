@@ -32,6 +32,10 @@
 #include "ext_common.h"
 #include "z_dsp.h"
 
+#include "ext_obex.h"
+
+
+
 #define FDNORDER 4
 
 typedef struct
@@ -66,10 +70,11 @@ typedef struct
 } ty_gverb;
 
 
-void *gverb_class;
+static t_class *gverb_class;
 
 
-ty_gverb *gverb_new(t_symbol *s, short argc, t_atom *argv);
+
+void *gverb_new(t_symbol *s, short argc, t_atom *argv);
 void gverb_free(ty_gverb *);
 void gverb_flush(ty_gverb *);
 static void gverb_do(ty_gverb *, float, float *, float *);
@@ -80,6 +85,15 @@ static void gverb_set_inputbandwidth(ty_gverb *, double);
 static void gverb_set_drylevel(ty_gverb *, double);
 static void gverb_set_earlylevel(ty_gverb *, double);
 static void gverb_set_taillevel(ty_gverb *, double);
+static void gverb_set_bypass(ty_gverb *p, long a);
+static void gverb_print(ty_gverb *p);
+void gverb_assist(ty_gverb *p, void *b, long m, long a, char *s);
+
+static void gverb_dsp(ty_gverb *p, t_signal **sp);
+void gverb_dsp64(ty_gverb *p, t_object *dsp64, short *count, double samplerate,
+                 long maxvectorsize, long flags);
+void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
+                     double **outs, long numouts, long sampleframes, long flags, void *userparam);
 
 /*
  * This FDN reverb can be made smoother by setting matrix elements at the
@@ -181,7 +195,7 @@ static inline void gverb_set_roomsize(ty_gverb *p, double a)
 	}
 	else
 	{
-		p->roomsize = CLIP(a, 1.0f, p->maxroomsize);
+		p->roomsize = CLAMP(a, 1.0f, p->maxroomsize);
 	}
 	p->largestdelay = p->rate * p->roomsize * 0.00294f;
 
@@ -211,7 +225,7 @@ static inline void gverb_set_revtime(ty_gverb *p, double a)
 	double n;
 	unsigned int i;
 
-	p->revtime = CLIP(a, 0.1f, 360.0f);
+	p->revtime = CLAMP(a, 0.1f, 360.0f);
 
 	ga = 60.0f;
 	gt = p->revtime;
@@ -229,7 +243,7 @@ static inline void gverb_set_damping(ty_gverb *p, double a)
 {
 	unsigned int i;
 
-	p->fdndamping = CLIP(a, 0.0f, 1.0f);
+	p->fdndamping = CLAMP(a, 0.0f, 1.0f);
 	for(i = 0; i < FDNORDER; i++)
 	{
 		damper_set(p->fdndamps[i],p->fdndamping);
@@ -238,25 +252,25 @@ static inline void gverb_set_damping(ty_gverb *p, double a)
 
 static inline void gverb_set_inputbandwidth(ty_gverb *p, double a)
 {
-	p->inputbandwidth = CLIP(a, 0.0f, 1.0f);
+	p->inputbandwidth = CLAMP(a, 0.0f, 1.0f);
 	damper_set(p->inputdamper,1.0f - p->inputbandwidth);
 }
 
 static inline void gverb_set_drylevel(ty_gverb *p, double a)
 {
-	a = CLIP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0f, 0.0f);
 	p->drylevel = DB_CO(a);
 }
 
 static inline void gverb_set_earlylevel(ty_gverb *p, double a)
 {
-	a = CLIP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0f, 0.0f);
 	p->earlylevel = DB_CO(a);
 }
 
 static inline void gverb_set_taillevel(ty_gverb *p, double a)
 {
-	a = CLIP(a, -90.0f, 0.0f);
+	a = CLAMP(a, -90.0f, 0.0f);
 	p->taillevel = DB_CO(a);
 }
 

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-               BuildableName = "plus~.mxo"
-               BlueprintName = "gigaverb~"
+               BlueprintIdentifier = "2FBBEAD608F335360078DB84"
+               BuildableName = "gigaverb~.mxo"
+               BlueprintName = "max-external"
                ReferencedContainer = "container:gigaverb~.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,7 +33,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Development"
+      buildConfiguration = "Deployment"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-            BuildableName = "plus~.mxo"
-            BlueprintName = "gigaverb~"
+            BlueprintIdentifier = "2FBBEAD608F335360078DB84"
+            BuildableName = "gigaverb~.mxo"
+            BlueprintName = "max-external"
             ReferencedContainer = "container:gigaverb~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8D01CCC60486CAD60068D4B7"
-            BuildableName = "plus~.mxo"
-            BlueprintName = "gigaverb~"
+            BlueprintIdentifier = "2FBBEAD608F335360078DB84"
+            BuildableName = "gigaverb~.mxo"
+            BlueprintName = "max-external"
             ReferencedContainer = "container:gigaverb~.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

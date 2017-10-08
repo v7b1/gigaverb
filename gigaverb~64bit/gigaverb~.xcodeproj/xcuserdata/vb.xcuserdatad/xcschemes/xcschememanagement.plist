@@ -4,12 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>gigaverb~ 2.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>gigaverb~.xcscheme</key>
+		<key>max-external.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -17,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>8D01CCC60486CAD60068D4B7</key>
+		<key>2FBBEAD608F335360078DB84</key>
 		<dict>
 			<key>primary</key>
 			<true/>
