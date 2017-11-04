@@ -35,15 +35,15 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
     ty_gverb *p = (ty_gverb *)object_alloc(gverb_class);
     
     
-	double maxroomsize = 300.0f;
-	double roomsize = 50.0f;
-	double revtime = 7.0f;
-	double damping = 0.5f;
-	double spread = 15.0f;
-	double inputbandwidth = 0.5f;
-	double drylevel = 0.0f; //-1.9832f;
-	double earlylevel = 0.0f; //-1.9832f;
-	double taillevel = 0.0f;
+	double maxroomsize = 300.0;
+	double roomsize = 50.0;
+	double revtime = 7.0;
+	double damping = 0.5;
+	double spread = 15.0;
+	double inputbandwidth = 0.5;
+	double drylevel = 0.0; //-1.9832f;
+	double earlylevel = 0.0; //-1.9832f;
+	double taillevel = 0.0;
 
 	double ga,gb,gt;
 	unsigned int i;
@@ -87,8 +87,6 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	}
 
 
-    
-    
     // zero out the struct, to be careful
     if(p)
     {
@@ -115,9 +113,10 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 
 	p->maxdelay = p->rate*p->maxroomsize/340.0;
 	p->largestdelay = p->rate*p->roomsize/340.0;
+    
 
-	if(p->maxroomsize != 300.0f)
-		post("gigaverb~: maximum roomsize: %f", p->maxroomsize);
+	if(p->maxroomsize != 300.0)
+		object_post((t_object *)p,"maximum roomsize: %f", p->maxroomsize);
 
 	/* Input damper */
 
@@ -125,8 +124,9 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	p->inputdamper = damper_make(1.0 - p->inputbandwidth);
 
 
+    
 	/* FDN section */
-    //p->fdndels = (ty_fixeddelay **)t_getbytes(FDNORDER*sizeof(ty_fixeddelay *));
+    
 	p->fdndels = (ty_fixeddelay **)sysmem_newptr(FDNORDER*sizeof(ty_fixeddelay *));
 	if(!p->fdndels)
 	{
@@ -170,7 +170,8 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	gt = p->revtime;
 	ga = pow(10.0,-ga/20.0);
 	n = (int)(p->rate*gt);
-	p->alpha = pow((double)ga,(double)1.0/(double)n);
+	p->alpha = pow(ga,1.0/(double)n);
+
 
 	gb = 0.0;
 	for(i = 0; i < FDNORDER; i++)
@@ -185,7 +186,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 #else
 		p->fdnlens[i] = (int)gb;
 #endif
-		// p->fdngains[i] = -pow(p->alpha,(double)p->fdnlens[i]);
+        
 		p->fdngains[i] = -pow(p->alpha,p->fdnlens[i]);
 	}
 
@@ -204,6 +205,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 
 
 	diffscale = p->fdnlens[3]/(210+159+562+410);
+    
 	spread1 = spread;
 	spread2 = 3.0*spread;
 
@@ -380,7 +382,7 @@ void gverb_dsp(ty_gverb *p, t_signal **sp)
 
 
 void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
-                     double **outs, long numouts, long sampleframes, long flags, void *userparam)
+            double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
     
     t_double *in = ins[0];
@@ -389,7 +391,7 @@ void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
     
     long n = sampleframes;
     t_double outL, outR, input;
-    float dry = p->drylevel;
+    t_double dry = p->drylevel;
     
     if (p->p_obj.z_disabled)
         return;
@@ -467,6 +469,7 @@ void gverb_clear(ty_gverb *p)
 			fixeddelay_write(p->fdndels[i], 0);
 	}
 }
+
 
 /*	print internal values */
 void gverb_print(ty_gverb *p)

@@ -5,9 +5,9 @@
 #include "z_dsp.h"	// needed for denormalization makros
 
 // Convert a value in dB's to a coefficent
-#define DB_CO(g) ((g) > -90.0f ? pow(10.0f, (g) * 0.05f) : 0.0f)
+#define DB_CO(g) ((g) > -90.0 ? pow(10.0, (g) * 0.05) : 0.0)
 // and back to dB
-#define CO_DB(g) ((g) != 0.0f ? 20.0f/log(10) * log((g)) : -90.0f)
+#define CO_DB(g) ((g) != 0.0 ? 20.0/log(10) * log((g)) : -90.0)
 
 typedef struct {
   int size;
@@ -40,9 +40,9 @@ extern void fixeddelay_free(ty_fixeddelay *);
 extern void fixeddelay_flush(ty_fixeddelay *);
 
 extern int isprime(int);
-extern int nearest_prime(int, float);
-extern int ff_round(float f);       // TODO: fix rounding and truncation
-extern int ff_trunc(float f);
+extern int nearest_prime(int, double);
+extern int ff_round(double d);       
+//extern int ff_trunc(float f);
 
 static inline double diffuser_do(ty_diffuser *p, double x)
 {

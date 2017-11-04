@@ -133,7 +133,7 @@ static inline void gverb_do(ty_gverb *p, double x, double *yl, double *yr)
 	double z;
 	unsigned int i;
 	double lsum,rsum,sum,sign;
-
+    
 	if(IS_NAN_DOUBLE(x) || IS_DENORM_DOUBLE(x) || fabs(x) > 100000.)
 	{
 		x = 0.0;
@@ -143,6 +143,7 @@ static inline void gverb_do(ty_gverb *p, double x, double *yl, double *yr)
 
 	z = diffuser_do(p->ldifs[0],z);
 
+    
 	for(i = 0; i < FDNORDER; i++)
 	{
 		p->u[i] = p->tapgains[i]*fixeddelay_read(p->tapdelay,p->taps[i]);
@@ -183,6 +184,7 @@ static inline void gverb_do(ty_gverb *p, double x, double *yl, double *yr)
 
 	*yl = lsum;
 	*yr = rsum;
+
 }
 
 static inline void gverb_set_roomsize(ty_gverb *p, double a)
@@ -197,7 +199,7 @@ static inline void gverb_set_roomsize(ty_gverb *p, double a)
 	{
 		p->roomsize = CLAMP(a, 1.0, p->maxroomsize);
 	}
-	p->largestdelay = p->rate * p->roomsize * 0.00294f;
+	p->largestdelay = p->rate * p->roomsize * 0.00294;
 
 	p->fdnlens[0] = ff_round(1.000000*p->largestdelay);
 	p->fdnlens[1] = ff_round(0.816490*p->largestdelay);
@@ -205,7 +207,7 @@ static inline void gverb_set_roomsize(ty_gverb *p, double a)
 	p->fdnlens[3] = ff_round(0.632450*p->largestdelay);
 	for(i = 0; i < FDNORDER; i++)
 	{
-		p->fdngains[i] = -powf((float)p->alpha, p->fdnlens[i]);
+		p->fdngains[i] = -pow(p->alpha, p->fdnlens[i]);
 	}
 
 	p->taps[0] = 5+ff_round(0.410*p->largestdelay);
@@ -229,7 +231,7 @@ static inline void gverb_set_revtime(ty_gverb *p, double a)
 
 	ga = 60.0;
 	gt = p->revtime;
-	ga = powf(10.0f,-ga/20.0);
+	ga = pow(10.0,-ga/20.0);
 	n = p->rate*gt;
 	p->alpha = pow(ga,1.0/n);
 

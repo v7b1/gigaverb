@@ -47,8 +47,11 @@ ty_diffuser *diffuser_make(int size, double coeff)
 
 void diffuser_free(ty_diffuser *p)
 {
-	t_freebytes(p->buf, p->size*sizeof(double));
-	t_freebytes(p, sizeof(ty_diffuser));
+	//t_freebytes(p->buf, p->size*sizeof(double));
+	//t_freebytes(p, sizeof(ty_diffuser));
+    
+    sysmem_freeptr(p->buf);
+    sysmem_freeptr(p);
 }
 
 void diffuser_flush(ty_diffuser *p)
@@ -134,15 +137,23 @@ int nearest_prime(int n, double rerror)
 }
 
 // Truncate float to int        // TODO: fix round and trunc
+/*
 int ff_trunc(float f) {
         f -= 0.5f;
         f += (3<<22);
         return *((int*)&f) - 0x4b400000;
-}
+}*/
 
 // Round float to int (faster than f_trunc)
+/*
 int ff_round(float f) {
         f += (3<<22);
         return *((int*)&f) - 0x4b400000;
+}*/
+
+int ff_round(double d) {
+    double t = (d) + 6755399441055744.0;
+    return *((int *)(&t));
+
 }
 
