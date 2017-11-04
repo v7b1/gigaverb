@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35FB5F2C1F8A9197005D0803 /* gverb~.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35FB5F281F8A9197005D0803 /* gverb~.cpp */; };
+		35FB5F2C1F8A9197005D0803 /* gverb~.c in Sources */ = {isa = PBXBuildFile; fileRef = 35FB5F281F8A9197005D0803 /* gverb~.c */; };
 		35FB5F2D1F8A9197005D0803 /* gverb~.h in Headers */ = {isa = PBXBuildFile; fileRef = 35FB5F291F8A9197005D0803 /* gverb~.h */; };
-		35FB5F2E1F8A9197005D0803 /* gverbdsp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35FB5F2A1F8A9197005D0803 /* gverbdsp.cpp */; };
+		35FB5F2E1F8A9197005D0803 /* gverbdsp.c in Sources */ = {isa = PBXBuildFile; fileRef = 35FB5F2A1F8A9197005D0803 /* gverbdsp.c */; };
 		35FB5F2F1F8A9197005D0803 /* gverbdsp.h in Headers */ = {isa = PBXBuildFile; fileRef = 35FB5F2B1F8A9197005D0803 /* gverbdsp.h */; };
 		35FB5F321F8A91B2005D0803 /* MaxAudioAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35FB5F311F8A91B2005D0803 /* MaxAudioAPI.framework */; };
 /* End PBXBuildFile section */
@@ -17,9 +17,9 @@
 /* Begin PBXFileReference section */
 		22CF10220EE984600054F513 /* maxmspsdk.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = maxmspsdk.xcconfig; path = ../../maxmspsdk.xcconfig; sourceTree = SOURCE_ROOT; };
 		2FBBEAE508F335360078DB84 /* gigaverb~.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "gigaverb~.mxo"; sourceTree = BUILT_PRODUCTS_DIR; };
-		35FB5F281F8A9197005D0803 /* gverb~.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "gverb~.cpp"; path = "src/gverb~.cpp"; sourceTree = "<group>"; };
+		35FB5F281F8A9197005D0803 /* gverb~.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "gverb~.c"; path = "src/gverb~.c"; sourceTree = "<group>"; };
 		35FB5F291F8A9197005D0803 /* gverb~.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "gverb~.h"; path = "src/gverb~.h"; sourceTree = "<group>"; };
-		35FB5F2A1F8A9197005D0803 /* gverbdsp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = gverbdsp.cpp; path = src/gverbdsp.cpp; sourceTree = "<group>"; };
+		35FB5F2A1F8A9197005D0803 /* gverbdsp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gverbdsp.c; path = src/gverbdsp.c; sourceTree = "<group>"; };
 		35FB5F2B1F8A9197005D0803 /* gverbdsp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gverbdsp.h; path = src/gverbdsp.h; sourceTree = "<group>"; };
 		35FB5F311F8A91B2005D0803 /* MaxAudioAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MaxAudioAPI.framework; path = "../../c74support/msp-includes/MaxAudioAPI.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,9 +58,9 @@
 		35FB5F271F8A9175005D0803 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				35FB5F281F8A9197005D0803 /* gverb~.cpp */,
+				35FB5F281F8A9197005D0803 /* gverb~.c */,
 				35FB5F291F8A9197005D0803 /* gverb~.h */,
-				35FB5F2A1F8A9197005D0803 /* gverbdsp.cpp */,
+				35FB5F2A1F8A9197005D0803 /* gverbdsp.c */,
 				35FB5F2B1F8A9197005D0803 /* gverbdsp.h */,
 			);
 			name = src;
@@ -157,8 +157,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35FB5F2E1F8A9197005D0803 /* gverbdsp.cpp in Sources */,
-				35FB5F2C1F8A9197005D0803 /* gverb~.cpp in Sources */,
+				35FB5F2E1F8A9197005D0803 /* gverbdsp.c in Sources */,
+				35FB5F2C1F8A9197005D0803 /* gverb~.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

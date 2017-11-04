@@ -26,7 +26,7 @@
 #include "gverbdsp.h"
 
 
-char *version = "gigaverb~ 64bit based on 1.0test5, 1999-2006 Juhana Sadeharju / Olaf Matthes / Volker Böhm";
+char *version = "gigaverb~ 64bit, 1999-2006 Juhana Sadeharju / Olaf Matthes / Volker Böhm";
 
 
 void *gverb_new(t_symbol *s, short argc, t_atom *argv)
@@ -35,55 +35,58 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
     ty_gverb *p = (ty_gverb *)object_alloc(gverb_class);
     
     
-	float maxroomsize = 300.0f;
-	float roomsize = 50.0f;
-	float revtime = 7.0f;
-	float damping = 0.5f;
-	float spread = 15.0f;
-	float inputbandwidth = 0.5f;
-	float drylevel = 0.0f; //-1.9832f;
-	float earlylevel = 0.0f; //-1.9832f;
-	float taillevel = 0.0f;
+	double maxroomsize = 300.0;
+	double roomsize = 50.0;
+	double revtime = 7.0;
+	double damping = 0.5;
+	double spread = 15.0;
+	double inputbandwidth = 0.5;
+	double drylevel = 0.0; //-1.9832f;
+	double earlylevel = 0.0; //-1.9832f;
+	double taillevel = 0.0;
 
-	float ga,gb,gt;
+	double ga,gb,gt;
 	unsigned int i;
 	int n;
-	float r;
-	float diffscale;
+	double r;
+	double diffscale;
 	int a,b,c,cc,d,dd,e;
-	float spread1,spread2;
+	double spread1,spread2;
 
 	if(argc >= 1)
 	{
 		// get maxroomsize
-		if(argv->a_type == A_LONG)
-		{
-			maxroomsize = CLAMP((float)argv[0].a_w.w_long, 0.1f, 10000.0f);
-		}
-		else if(argv->a_type == A_FLOAT)
-		{
-			maxroomsize = CLAMP(argv[0].a_w.w_float, 0.1f, 10000.0f);
-		}
+        switch(atom_gettype(argv)) {
+            case A_FLOAT:
+                maxroomsize = CLAMP( atom_getlong(argv), 0.1, 10000.);
+                break;
+            case A_LONG:
+                maxroomsize = CLAMP( atom_getfloat(argv), 0.1, 10000.);
+                break;
+            default:
+                object_post((t_object *)p, "expected number for param 1 (maxroomsize)");
+                break;
+        }
+		
 	}
 	else if(argc >= 2)
 	{
 		// get spreading
-		if(argv->a_type == A_LONG)
-		{
-			spread = CLAMP((float)argv[1].a_w.w_long, 0.0f, 100.0f);
-		}
-		else if(argv->a_type == A_FLOAT)
-		{
-			spread = CLAMP(argv[1].a_w.w_float, 0.0f, 100.0f);
-		}
+        switch(atom_gettype(argv+1)) {
+            case A_FLOAT:
+                spread = CLAMP( atom_getlong(argv+1), 0., 100.);
+                break;
+            case A_LONG:
+                spread = CLAMP( atom_getfloat(argv+1), 0., 100.);
+                break;
+            default:
+                object_post((t_object *)p, "expected number for param 2 (spreading)");
+                break;
+        }
+        
 	}
 
-	//ty_gverb *p = (ty_gverb *)newobject(gverb_class);
-    
 
-    //t_myObj *x = object_alloc(myObj_class);
-    
-    
     // zero out the struct, to be careful
     if(p)
     {
@@ -102,7 +105,7 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	p->rate = (int)sys_getsr();
 	p->fdndamping = damping;
 	p->maxroomsize = maxroomsize;
-	p->roomsize = CLAMP(roomsize, 0.1f, maxroomsize);
+	p->roomsize = CLAMP(roomsize, 0.1, maxroomsize);
 	p->revtime = revtime;
 	p->drylevel = drylevel;
 	p->earlylevel = earlylevel;
@@ -110,9 +113,10 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 
 	p->maxdelay = p->rate*p->maxroomsize/340.0;
 	p->largestdelay = p->rate*p->roomsize/340.0;
+    
 
-	if(p->maxroomsize != 300.0f)
-		post("gigaverb~: maximum roomsize: %f", p->maxroomsize);
+	if(p->maxroomsize != 300.0)
+		object_post((t_object *)p,"maximum roomsize: %f", p->maxroomsize);
 
 	/* Input damper */
 
@@ -120,9 +124,10 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	p->inputdamper = damper_make(1.0 - p->inputbandwidth);
 
 
+    
 	/* FDN section */
-
-	p->fdndels = (ty_fixeddelay **)t_getbytes(FDNORDER*sizeof(ty_fixeddelay *));
+    
+	p->fdndels = (ty_fixeddelay **)sysmem_newptr(FDNORDER*sizeof(ty_fixeddelay *));
 	if(!p->fdndels)
 	{
 		error("gigaverb~: out of memory");
@@ -137,15 +142,15 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 			return (NULL);
 		}
 	}
-	p->fdngains = (float *)t_getbytes(FDNORDER*sizeof(float));
-	p->fdnlens = (int *)t_getbytes(FDNORDER*sizeof(int));
+    p->fdngains = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->fdnlens = (int *)sysmem_newptr(FDNORDER*sizeof(int));
 	if(!p->fdngains || !p->fdnlens)
 	{
 		error("gigaverb~: out of memory");
 		return (NULL);
 	}
 
-	p->fdndamps = (ty_damper **)t_getbytes(FDNORDER*sizeof(ty_damper *));
+	p->fdndamps = (ty_damper **)sysmem_newptr(FDNORDER*sizeof(ty_damper *));
 	if(!p->fdndamps)
 	{
 		error("gigaverb~: out of memory");
@@ -165,7 +170,8 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	gt = p->revtime;
 	ga = pow(10.0,-ga/20.0);
 	n = (int)(p->rate*gt);
-	p->alpha = pow((double)ga,(double)1.0/(double)n);
+	p->alpha = pow(ga,1.0/(double)n);
+
 
 	gb = 0.0;
 	for(i = 0; i < FDNORDER; i++)
@@ -180,13 +186,13 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 #else
 		p->fdnlens[i] = (int)gb;
 #endif
-		// p->fdngains[i] = -pow(p->alpha,(double)p->fdnlens[i]);
-		p->fdngains[i] = -powf((float)p->alpha,p->fdnlens[i]);
+        
+		p->fdngains[i] = -pow(p->alpha,p->fdnlens[i]);
 	}
 
-	p->d = (float *)t_getbytes(FDNORDER*sizeof(float));
-	p->u = (float *)t_getbytes(FDNORDER*sizeof(float));
-	p->f = (float *)t_getbytes(FDNORDER*sizeof(float));
+	p->d = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->u = (double *)sysmem_newptr(FDNORDER*sizeof(double));
+	p->f = (double *)sysmem_newptr(FDNORDER*sizeof(double));
 	if(!p->d || !p->u || !p->f)
 	{
 		error("gigaverb~: out of memory");
@@ -198,22 +204,23 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	/* Diffuser section */
 
 
-	diffscale = (float)p->fdnlens[3]/(210+159+562+410);
+	diffscale = p->fdnlens[3]/(210+159+562+410);
+    
 	spread1 = spread;
 	spread2 = 3.0*spread;
 
 	b = 210;
-	r = 0.125541f;
+	r = 0.125541;
 	a = (int)(spread1*r);
 	c = 210+159+a;
 	cc = c-b;
-	r = 0.854046f;
+	r = 0.854046;
 	a = (int)(spread2*r);
 	d = 210+159+562+a;
 	dd = d-c;
 	e = 1341-d;
 
-	p->ldifs = (ty_diffuser **)t_getbytes(4*sizeof(ty_diffuser *));
+	p->ldifs = (ty_diffuser **)sysmem_newptr(4*sizeof(ty_diffuser *));
 	if(!p->ldifs)
 	{
 		error("gigaverb~: out of memory");
@@ -230,17 +237,17 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	}
 
 	b = 210;
-	r = -0.568366f;
+	r = -0.568366;
 	a = (int)(spread1*r);
 	c = 210+159+a;
 	cc = c-b;
-	r = -0.126815f;
+	r = -0.126815;
 	a = (int)(spread2*r);
 	d = 210+159+562+a;
 	dd = d-c;
 	e = 1341-d;
 
-	p->rdifs = (ty_diffuser **)t_getbytes(4*sizeof(ty_diffuser *));
+	p->rdifs = (ty_diffuser **)sysmem_newptr(4*sizeof(ty_diffuser *));
 	if(!p->rdifs)
 	{
 		error("gigaverb~: out of memory");
@@ -260,8 +267,8 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 	/* Tapped delay section */
 
 	p->tapdelay = fixeddelay_make(44000);
-	p->taps = (int *)t_getbytes(FDNORDER*sizeof(int));
-	p->tapgains = (float *)t_getbytes(FDNORDER*sizeof(float));
+	p->taps = (int *)sysmem_newptr(FDNORDER*sizeof(int));
+	p->tapgains = (double *)sysmem_newptr(FDNORDER*sizeof(double));
 	if(!p->tapdelay || !p->taps || !p->tapgains)
 	{
 		error("gigaverb~: out of memory");
@@ -295,17 +302,31 @@ void gverb_free(ty_gverb *p)
 		diffuser_free(p->ldifs[i]);
 		diffuser_free(p->rdifs[i]);
 	}
-	t_freebytes(p->fdndels, FDNORDER*sizeof(ty_fixeddelay *));
-	t_freebytes(p->fdngains, FDNORDER*sizeof(float));
-	t_freebytes(p->fdnlens, FDNORDER*sizeof(int));
-	t_freebytes(p->fdndamps, FDNORDER*sizeof(ty_damper *));
-	t_freebytes(p->d, FDNORDER*sizeof(float));
-	t_freebytes(p->u, FDNORDER*sizeof(float));
-	t_freebytes(p->f, FDNORDER*sizeof(float));
-	t_freebytes(p->ldifs, 4*sizeof(ty_diffuser *));
-	t_freebytes(p->rdifs, 4*sizeof(ty_diffuser *));
-	t_freebytes(p->taps, FDNORDER*sizeof(int));
-	t_freebytes(p->tapgains, FDNORDER*sizeof(float));
+	sysmem_freeptr(p->fdndels);
+	sysmem_freeptr(p->fdngains);
+	sysmem_freeptr(p->fdnlens);
+	sysmem_freeptr(p->fdndamps);
+	sysmem_freeptr(p->d);
+	sysmem_freeptr(p->u);
+	sysmem_freeptr(p->f);
+	sysmem_freeptr(p->ldifs);
+	sysmem_freeptr(p->rdifs);
+	sysmem_freeptr(p->taps);
+	sysmem_freeptr(p->tapgains);
+    
+    /*
+     t_freebytes(p->fdndels, FDNORDER*sizeof(ty_fixeddelay *));
+     t_freebytes(p->fdngains, FDNORDER*sizeof(double));
+     t_freebytes(p->fdnlens, FDNORDER*sizeof(int));
+     t_freebytes(p->fdndamps, FDNORDER*sizeof(ty_damper *));
+     t_freebytes(p->d, FDNORDER*sizeof(double));
+     t_freebytes(p->u, FDNORDER*sizeof(double));
+     t_freebytes(p->f, FDNORDER*sizeof(double));
+     t_freebytes(p->ldifs, 4*sizeof(ty_diffuser *));
+     t_freebytes(p->rdifs, 4*sizeof(ty_diffuser *));
+     t_freebytes(p->taps, FDNORDER*sizeof(int));
+     t_freebytes(p->tapgains, FDNORDER*sizeof(double));
+     */
 	fixeddelay_free(p->tapdelay);
 }
 
@@ -316,7 +337,7 @@ t_int *gverb_perform(t_int *w)
     t_float *out2 = (t_float *)(w[3]);
 	ty_gverb *p = (ty_gverb *)(w[4]);
 	int n = (int)(w[5]);
-	t_float outL, outR, input;
+	t_double outL, outR, input;
 	float dry = p->drylevel;
 		
 	if (p->p_obj.z_disabled)
@@ -361,7 +382,7 @@ void gverb_dsp(ty_gverb *p, t_signal **sp)
 
 
 void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
-                     double **outs, long numouts, long sampleframes, long flags, void *userparam)
+            double **outs, long numouts, long sampleframes, long flags, void *userparam)
 {
     
     t_double *in = ins[0];
@@ -369,8 +390,8 @@ void gverb_perform64(ty_gverb *p, t_object *dsp64, double **ins, long numins,
     t_double *out2 = outs[1];
     
     long n = sampleframes;
-    t_float outL, outR, input;
-    float dry = p->drylevel;
+    t_double outL, outR, input;
+    t_double dry = p->drylevel;
     
     if (p->p_obj.z_disabled)
         return;
@@ -431,9 +452,9 @@ void gverb_flush(ty_gverb *p)
 		diffuser_flush(p->ldifs[i]);
 		diffuser_flush(p->rdifs[i]);
 	}
-	memset(p->d, 0, FDNORDER * sizeof(float));
-	memset(p->u, 0, FDNORDER * sizeof(float));
-	memset(p->f, 0, FDNORDER * sizeof(float));
+	memset(p->d, 0, FDNORDER * sizeof(double));
+	memset(p->u, 0, FDNORDER * sizeof(double));
+	memset(p->f, 0, FDNORDER * sizeof(double));
 	fixeddelay_flush(p->tapdelay);
 }
 
@@ -449,10 +470,11 @@ void gverb_clear(ty_gverb *p)
 	}
 }
 
+
 /*	print internal values */
 void gverb_print(ty_gverb *p)
 {
-	post("gigaverb~ 1.0:");
+	object_post((t_object *)p, "gigaverb~ 1.0:");
 	post("    roomsize: %0.0f meters (%0.0f maximum)", p->roomsize, p->maxroomsize);
 	post("    reverbtime: %0.02f seconds", p->revtime);
 	post("    damping: %0.02f", p->fdndamping);
