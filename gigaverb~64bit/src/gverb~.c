@@ -58,10 +58,10 @@ void *gverb_new(t_symbol *s, short argc, t_atom *argv)
 		// get maxroomsize
         switch(atom_gettype(argv)) {
             case A_FLOAT:
-                maxroomsize = CLAMP( atom_getlong(argv), 0.1, 10000.);
+                maxroomsize = CLAMP(atom_getlong(argv), 0.1, 10000.);
                 break;
             case A_LONG:
-                maxroomsize = CLAMP( atom_getfloat(argv), 0.1, 10000.);
+                maxroomsize = CLAMP(atom_getfloat(argv), 0.1, 10000.);
                 break;
             default:
                 object_post((t_object *)p, "expected number for param 1 (maxroomsize)");
