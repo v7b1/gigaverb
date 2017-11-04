@@ -5,7 +5,7 @@
 
 *.mxo
 *.zip
-*/build/*
+*/build
 
 
 
