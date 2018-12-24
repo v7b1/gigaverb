@@ -2,15 +2,15 @@
 	"patcher" : 	{
 		"fileversion" : 1,
 		"appversion" : 		{
-			"major" : 7,
-			"minor" : 3,
-			"revision" : 4,
+			"major" : 8,
+			"minor" : 0,
+			"revision" : 2,
 			"architecture" : "x64",
 			"modernui" : 1
 		}
 ,
+		"classnamespace" : "box",
 		"rect" : [ 107.0, 79.0, 869.0, 797.0 ],
-		"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 13.0,
@@ -45,8 +45,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 101.0, 476.0, 24.0, 24.0 ],
-					"style" : ""
+					"patching_rect" : [ 101.0, 476.0, 24.0, 24.0 ]
 				}
 
 			}
@@ -59,7 +58,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 42.0, 554.0, 143.0, 20.0 ],
-					"style" : "",
 					"text" : "• try some presets"
 				}
 
@@ -73,7 +71,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 66.0, 618.0, 45.0, 17.0 ],
-					"style" : "",
 					"text" : "• canyon"
 				}
 
@@ -87,7 +84,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 66.0, 607.0, 53.0, 17.0 ],
-					"style" : "",
 					"text" : "• cathedral"
 				}
 
@@ -101,7 +97,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 66.0, 597.0, 43.0, 17.0 ],
-					"style" : "",
 					"text" : "• church"
 				}
 
@@ -115,7 +110,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 66.0, 586.0, 60.0, 17.0 ],
-					"style" : "",
 					"text" : "• living room"
 				}
 
@@ -129,7 +123,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 66.0, 576.0, 54.0, 17.0 ],
-					"style" : "",
 					"text" : "• bathroom"
 				}
 
@@ -141,7 +134,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 4,
 					"outlettype" : [ "preset", "int", "preset", "int" ],
-					"patching_rect" : [ 46.0, 575.0, 17.0, 58.0 ],
+					"patching_rect" : [ 46.0, 575.0, 16.0, 67.0 ],
 					"preset_data" : [ 						{
 							"number" : 1,
 							"data" : [ 5, "obj-60", "number", "float", -11.0, 5, "obj-39", "number", "float", 0.48, 5, "obj-38", "number", "float", 5.0, 5, "obj-37", "number", "float", 0.62, 5, "obj-34", "number", "float", 0.6, 5, "obj-17", "number", "float", -13.0, 5, "obj-14", "number", "float", -6.0, 5, "obj-9", "toggle", "int", 0 ]
@@ -162,8 +155,7 @@
 							"number" : 5,
 							"data" : [ 5, "obj-60", "number", "float", -26.0, 5, "obj-39", "number", "float", 0.51, 5, "obj-38", "number", "float", 300.0, 5, "obj-37", "number", "float", 0.43, 5, "obj-34", "number", "float", 103.0, 5, "obj-17", "number", "float", -20.0, 5, "obj-14", "number", "float", -5.0, 5, "obj-9", "toggle", "int", 0 ]
 						}
- ],
-					"style" : ""
+ ]
 				}
 
 			}
@@ -177,7 +169,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 332.0, 28.0, 454.0, 38.0 ],
-					"style" : "",
 					"text" : "A mono in, stereo out reverb implementation by Juhana Sadeharju (kouhia@nic.funet.fi). Max/MSP-ified by Olaf Matthes."
 				}
 
@@ -190,8 +181,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 289.0, 504.0, 26.0, 26.0 ],
-					"style" : ""
+					"patching_rect" : [ 289.0, 504.0, 26.0, 26.0 ]
 				}
 
 			}
@@ -205,7 +195,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 323.0, 532.5, 322.0, 33.0 ],
-					"style" : "",
 					"text" : "• Clear the delay lines after a DSP overblow or to get rid of any remaining delay tailes."
 				}
 
@@ -220,7 +209,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 241.0, 543.5, 45.0, 22.0 ],
-					"style" : "",
 					"text" : "clear"
 				}
 
@@ -235,7 +223,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 323.0, 571.0, 491.0, 47.0 ],
-					"style" : "",
 					"text" : "• First optional creation arguments sets maximum roomsize in meters. This value largely affects memomry usage and should be set as small as possible for better performance! Default is 300. Second argument is stereo spreading (0 - 100) which defaults to 15."
 				}
 
@@ -250,7 +237,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 440.0, 52.0, 22.0 ],
-					"style" : "",
 					"text" : "dry $1"
 				}
 
@@ -270,7 +256,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 211.0, 416.0, 52.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -285,7 +270,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 417.0, 417.0, 20.0 ],
-					"style" : "",
 					"text" : "• Dry level (dB): The level of the unreverberated signal. Values: -90 - 0 dB"
 				}
 
@@ -300,7 +284,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 389.0, 50.0, 22.0 ],
-					"style" : "",
 					"text" : "tail $1"
 				}
 
@@ -320,7 +303,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 211.0, 366.0, 52.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -335,7 +317,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 68.5, 451.0, 100.0, 20.0 ],
-					"style" : "",
 					"text" : "• play soundfile"
 				}
 
@@ -350,7 +331,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 323.0, 500.5, 416.0, 33.0 ],
-					"style" : "",
 					"text" : "• Bypass signal uneffected when set to 1. Can be used to compare reverb signal with original signal and to save CPU power when gverb~ is not used."
 				}
 
@@ -365,7 +345,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 506.0, 75.0, 22.0 ],
-					"style" : "",
 					"text" : "bypass $1"
 				}
 
@@ -379,7 +358,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 64.0, 163.0, 103.0, 17.0 ],
-					"style" : "",
 					"text" : "• test signal on/off"
 				}
 
@@ -394,7 +372,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 59.0, 476.0, 35.0, 22.0 ],
-					"style" : "",
 					"text" : "open"
 				}
 
@@ -421,7 +398,6 @@
 						"timestretch" : [ 0 ]
 					}
 ,
-					"style" : "",
 					"text" : "sfplay~"
 				}
 
@@ -436,7 +412,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 42.0, 293.0, 38.0, 22.0 ],
-					"style" : "",
 					"text" : "*~ 0"
 				}
 
@@ -451,7 +426,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"patching_rect" : [ 74.0, 242.0, 29.0, 22.0 ],
-					"style" : "",
 					"text" : "0"
 				}
 
@@ -466,7 +440,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "float" ],
 					"patching_rect" : [ 39.0, 242.0, 33.0, 22.0 ],
-					"style" : "",
 					"text" : "0.5"
 				}
 
@@ -481,7 +454,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 47.0, 217.0, 62.0, 22.0 ],
-					"style" : "",
 					"text" : "pipe 200"
 				}
 
@@ -496,7 +468,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 42.0, 273.0, 77.0, 22.0 ],
-					"style" : "",
 					"text" : "cycle~ 400"
 				}
 
@@ -509,8 +480,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 39.0, 158.0, 27.0, 27.0 ],
-					"style" : ""
+					"patching_rect" : [ 39.0, 158.0, 27.0, 27.0 ]
 				}
 
 			}
@@ -524,7 +494,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
 					"patching_rect" : [ 39.0, 194.0, 71.0, 22.0 ],
-					"style" : "",
 					"text" : "metro 700"
 				}
 
@@ -537,7 +506,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 252.0, 655.0, 38.0, 23.0 ],
-					"style" : "",
 					"text" : "*~ 0."
 				}
 
@@ -557,7 +525,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 212.0, 218.0, 55.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -573,7 +540,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 241.0, 82.0, 22.0 ],
-					"style" : "",
 					"text" : "revtime $1"
 				}
 
@@ -588,7 +554,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 222.0, 338.0, 33.0 ],
-					"style" : "",
 					"text" : "• Reverb time (s): Reverb decay time, in seconds. 7 is a good place to start. Values: 0.1 - 360 seconds!"
 				}
 
@@ -608,7 +573,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 212.0, 166.0, 52.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -629,7 +593,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 211.0, 115.0, 55.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -650,7 +613,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 212.0, 268.0, 52.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -665,7 +627,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 207.0, 27.0, 129.0, 33.0 ],
-					"style" : "",
 					"text" : "gigaverb~"
 				}
 
@@ -679,7 +640,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 207.0, 66.0, 520.0, 22.0 ],
-					"style" : "",
 					"text" : "Version 1.1, (c) 1999-2004 Juhana Sadeharju / Olaf Matthes / Volker Böhm"
 				}
 
@@ -693,7 +653,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 467.0, 414.0, 20.0 ],
-					"style" : "",
 					"text" : "• Print the values of all parameters to the Max window."
 				}
 
@@ -707,7 +666,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 380.0, 620.0, 102.0, 20.0 ],
-					"style" : "",
 					"text" : "• output volume"
 				}
 
@@ -727,7 +685,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 334.0, 620.0, 44.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -741,7 +698,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 197.0, 655.0, 38.0, 23.0 ],
-					"style" : "",
 					"text" : "*~ 0."
 				}
 
@@ -753,7 +709,6 @@
 					"numinlets" : 2,
 					"numoutlets" : 0,
 					"patching_rect" : [ 197.0, 708.0, 39.0, 23.0 ],
-					"style" : "",
 					"text" : "dac~"
 				}
 
@@ -768,7 +723,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 232.5, 466.0, 47.0, 22.0 ],
-					"style" : "",
 					"text" : "print"
 				}
 
@@ -783,7 +737,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 340.0, 58.0, 22.0 ],
-					"style" : "",
 					"text" : "early $1"
 				}
 
@@ -798,7 +751,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 212.0, 291.0, 90.0, 22.0 ],
-					"style" : "",
 					"text" : "bandwidth $1"
 				}
 
@@ -813,7 +765,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 189.0, 82.0, 22.0 ],
-					"style" : "",
 					"text" : "damping $1"
 				}
 
@@ -828,7 +779,6 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 211.0, 138.0, 83.0, 22.0 ],
-					"style" : "",
 					"text" : "roomsize $1"
 				}
 
@@ -842,7 +792,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 59.0, 655.0, 164.0, 20.0 ],
-					"style" : "",
 					"text" : "• click here to start DSP."
 				}
 
@@ -855,8 +804,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "int" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 42.0, 653.0, 26.0, 26.0 ],
-					"style" : ""
+					"patching_rect" : [ 42.0, 653.0, 26.0, 26.0 ]
 				}
 
 			}
@@ -871,7 +819,6 @@
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "signal" ],
 					"patching_rect" : [ 197.0, 576.0, 111.0, 23.0 ],
-					"style" : "",
 					"text" : "gigaverb~ 300 15"
 				}
 
@@ -886,7 +833,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 109.0, 466.0, 47.0 ],
-					"style" : "",
 					"text" : "• The size of the room, in meters. Excessivly large, and excessivly small values will make it sound a bit unrealistic. Values of around 30 sound good. Values: 1 - 300 meters (or what ever was specified as maximum)"
 				}
 
@@ -901,7 +847,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 170.0, 466.0, 33.0 ],
-					"style" : "",
 					"text" : "• Damping: This controls the high frequency damping (a lowpass filter), values near 1 will make it sound very bright, values near 0 will make it sound very dark. Values: 0 - 1"
 				}
 
@@ -916,7 +861,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 272.0, 392.0, 33.0 ],
-					"style" : "",
 					"text" : "• Input bandwidth: This is like a damping control for the input, it has a similar effect to the damping control, but is subtly different. Values: 0 - 1"
 				}
 
@@ -931,7 +875,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 324.0, 452.0, 33.0 ],
-					"style" : "",
 					"text" : "• Early reflection level (dB): The quantity of early reflections (scatter reflections directly from the source). Think of Lexicons ambiance patches. Values: -90 - 0 dB"
 				}
 
@@ -946,7 +889,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 324.0, 368.0, 275.0, 33.0 ],
-					"style" : "",
 					"text" : "• Tail level (dB): The level of the classic reverb tail reflections. Values: -90 - 0 dB"
 				}
 
@@ -966,7 +908,6 @@
 					"outlettype" : [ "", "bang" ],
 					"parameter_enable" : 0,
 					"patching_rect" : [ 212.0, 317.0, 52.0, 22.0 ],
-					"style" : "",
 					"textcolor" : [ 0.0, 0.0, 0.0, 1.0 ],
 					"triscale" : 0.9
 				}
@@ -982,7 +923,6 @@
 					"numinlets" : 1,
 					"numoutlets" : 0,
 					"patching_rect" : [ 480.0, 690.0, 340.0, 47.0 ],
-					"style" : "",
 					"text" : "GVerb algorithm designed and implemented by Juhana Sadeharju. Max/MSP implementation by Olaf Matthes.\n64bit version by Volker Böhm"
 				}
 
@@ -1262,7 +1202,7 @@
 				"patchline" : 				{
 					"destination" : [ "obj-31", 0 ],
 					"hidden" : 1,
-					"midpoints" : [ 56.5, 680.0, 15.0, 680.0, 15.0, 144.0, 48.5, 144.0 ],
+					"midpoints" : [ 56.0, 680.0, 15.0, 680.0, 15.0, 144.0, 48.5, 144.0 ],
 					"order" : 2,
 					"source" : [ "obj-7", 2 ]
 				}
@@ -1272,7 +1212,7 @@
 				"patchline" : 				{
 					"destination" : [ "obj-44", 0 ],
 					"hidden" : 1,
-					"midpoints" : [ 56.5, 700.0, 390.0, 700.0, 390.0, 617.0, 343.5, 617.0 ],
+					"midpoints" : [ 56.0, 700.0, 390.0, 700.0, 390.0, 617.0, 343.5, 617.0 ],
 					"order" : 0,
 					"source" : [ "obj-7", 2 ]
 				}
@@ -1282,7 +1222,7 @@
 				"patchline" : 				{
 					"destination" : [ "obj-53", 0 ],
 					"hidden" : 1,
-					"midpoints" : [ 56.5, 637.0, 51.5, 637.0 ],
+					"midpoints" : [ 56.0, 637.0, 51.5, 637.0 ],
 					"order" : 1,
 					"source" : [ "obj-7", 2 ]
 				}
@@ -1302,12 +1242,7 @@
 			}
  ],
 		"autosave" : 0,
-		"bgfillcolor_type" : "gradient",
-		"bgfillcolor_color1" : [ 0.376471, 0.384314, 0.4, 1.0 ],
-		"bgfillcolor_color2" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-		"bgfillcolor_color" : [ 0.290196, 0.309804, 0.301961, 1.0 ],
-		"bgfillcolor_angle" : 270.0,
-		"bgfillcolor_proportion" : 0.39
+		"bgcolor" : [ 0.65098, 0.666667, 0.662745, 1.0 ]
 	}
 
 }
